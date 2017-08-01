@@ -16,7 +16,7 @@ public class ListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        View v = inflater.inflate(R.layout.fragment_list, container, false);
+        final View v = inflater.inflate(R.layout.fragment_list, container, false);
 
         ListView listView = v.findViewById(R.id.list_view);
         final String[] strings = new String[]{"hi", "this", "is", "fun"};
@@ -24,8 +24,14 @@ public class ListFragment extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = DetailFragmentActivity.newIntent(getContext(), strings[i]);
-                startActivity(intent);
+                if (v.findViewById(R.id.detail_fragment_container) != null) {
+                    DetailFragment fragment = DetailFragment.newInstance(strings[i]);
+                    getFragmentManager().beginTransaction().replace(R.id.detail_fragment_container, fragment).commit();
+                } else {
+                    Intent intent = DetailFragmentActivity.newIntent(getContext(), strings[i]);
+                    startActivity(intent);
+                }
+
             }
         });
 
